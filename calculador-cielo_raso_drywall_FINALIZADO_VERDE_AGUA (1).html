@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculador de Cielo Raso Drywall</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230b4f4a'/%3E%3Cstop offset='1' stop-color='%2314a89c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url%28%23g%29'/%3E%3Ctext x='32' y='48' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='900' font-size='46' fill='%23fff'%3EY%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',Arial,sans-serif}
+html{scroll-behavior:smooth}
+body{background:#e6f0ef;min-height:100vh;padding:max(12px,env(safe-area-inset-top)) 12px max(30px,env(safe-area-inset-bottom))}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.hero{background:linear-gradient(135deg,#0b4f4a,#14a89c);color:#fff;border-radius:16px;padding:12px 14px;text-align:center;box-shadow:0 6px 18px rgba(11,79,74,.28);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.hero h1{font-size:clamp(18px,4.6vw,26px);font-weight:900;line-height:1.1;text-transform:uppercase}
+.hero .sub{font-size:12px;font-style:italic;opacity:.85;margin-top:6px}
+.card{background:#fff;border-radius:16px;box-shadow:0 4px 18px rgba(8,40,38,.1);padding:12px;display:flex;flex-direction:column;gap:9px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;width:100%;max-width:560px;margin:0 auto}
+@media(min-width:900px){.grid{max-width:1180px;grid-template-columns:minmax(380px,480px) minmax(0,1fr);align-items:start}.prev{position:sticky;top:14px}}
+.title{font-weight:900;font-size:16px;color:#0b2f2c}
+.fg{display:flex;flex-direction:column;gap:7px}
+.lb{font-size:13px;color:#222;font-weight:700}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inp{display:flex;align-items:center;border:2px solid #0f766e;border-radius:10px;overflow:hidden;background:#fff}
+.inp input{width:100%;min-width:0;border:none;padding:8px 8px 8px 12px;font-size:20px;font-weight:700;outline:none;color:#0b2f2c;background:transparent}
+.inp .u{padding:0 12px 0 0;font-weight:800;color:#0f766e;font-size:15px}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bt{padding:9px 6px;border:2px solid #cfe3e0;background:#f4faf9;color:#4a5560;font-weight:800;font-size:14px;border-radius:10px;cursor:pointer;transition:all .15s}
+.bt.on{background:#0f766e;color:#fff;border-color:#0f766e;box-shadow:0 3px 8px rgba(15,118,110,.3)}
+.bt:focus-visible,.inp input:focus-visible{outline:3px solid #f07f0a;outline-offset:2px}
+.box .rv{flex-wrap:wrap}
+.sug{margin-left:auto;align-self:center;border:2px solid #f07f0a;background:#fff4e5;color:#a05a00;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:800;cursor:pointer}
+.sug:focus-visible,.opt:focus-visible,.x:focus-visible{outline:3px solid #f07f0a;outline-offset:2px}
+.ov{position:fixed;inset:0;background:rgba(5,30,28,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.mod{background:#fff;border-radius:18px;max-width:520px;width:100%;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.3);max-height:90vh;overflow:auto}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.mh b{font-size:18px;font-weight:900;color:#0b2f2c;text-transform:uppercase}
+.x{border:none;background:#e6f4f2;color:#0f766e;width:38px;height:38px;border-radius:50%;font-size:20px;font-weight:800;cursor:pointer}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{border:2px solid #cfe3e0;background:#f4faf9;border-radius:14px;padding:8px;cursor:pointer;display:flex;flex-direction:column;gap:6px;text-align:center;align-items:center}
+.opt img{width:100%;aspect-ratio:1/1;object-fit:contain;border-radius:10px;background:#fff}
+.opt.on{border-color:#0f766e;background:#e6f4f2;box-shadow:0 0 0 3px rgba(15,118,110,.2)}
+.opt b{font-size:15px;font-weight:900;color:#0b2f2c}
+.opt span{font-size:12px;font-weight:700;color:#5d6b73;line-height:1.3}
+.opc{border:2px solid #cfe3e0;background:#f4faf9;border-radius:12px;padding:7px 10px;display:flex;flex-direction:column;gap:6px}
+.opc summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;color:#0b4f4a}
+.opc summary::-webkit-details-marker{display:none}
+.opc summary em{font-style:normal;font-weight:700;font-size:11.5px;color:#5d6b73;margin-left:auto}
+.opc summary::after{content:"⌄";font-size:17px;color:#0f766e}.opc[open] summary::after{content:"⌃"}
+.opc[open] summary{margin-bottom:4px}
+.oc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:8px}
+.lb.sm{font-size:12px}
+.inp.sm{border-width:1.5px;border-radius:8px}.inp.sm input{font-size:16px;padding:6px 6px 6px 10px}
+.bt.sm{padding:7px 4px;font-size:12px;border-radius:8px;border-width:1.5px;box-shadow:none}
+.sg{cursor:pointer}.sg img{aspect-ratio:4/3}
+.hint{font-size:11.5px;font-weight:500;color:#5d6b73;line-height:1.35}
+.learn{max-width:780px;width:100%;margin:0 auto;background:#fff;border-radius:16px;padding:10px;box-shadow:0 4px 18px rgba(8,40,38,.1)}
+.learn summary{list-style:none;cursor:pointer;background:#fff7ea;border:2px solid #f07f0a;border-radius:12px;padding:11px 14px;font-weight:900;font-size:15px;color:#8a4b00;display:flex;justify-content:space-between}
+.learn summary::-webkit-details-marker{display:none}
+.learn summary::after{content:"⌄";font-size:18px}.learn[open] summary::after{content:"⌃"}
+.lh{font-size:12.5px;font-weight:800;color:#a05a00;margin:10px 2px 6px}
+.steps{list-style:none;display:flex;flex-direction:column;gap:8px}
+.steps li{display:flex;gap:10px;align-items:flex-start;background:#eef6f5;border-radius:10px;padding:8px 10px;font-size:13.5px;color:#26323a;line-height:1.4}
+.steps .n{flex:none;width:24px;height:24px;border-radius:50%;background:#0f766e;color:#fff;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center}
+.steps b{color:#0f766e}.steps .st{display:block;font-weight:900;color:#0b2f2c;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.steps em{font-style:normal;font-weight:800;color:#e07a00}
+.jump{display:none;text-align:center;text-decoration:none;background:#fff4e5;color:#a05a00;border:2px solid #f07f0a;border-radius:10px;padding:11px;font-weight:800;font-size:14px}
+@media(max-width:899px){.jump{display:block}}
+.main{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(135deg,#0b4f4a,#14a89c);color:#fff;border-radius:14px;padding:7px 14px;box-shadow:0 6px 16px rgba(11,79,74,.3)}
+.main::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.2),transparent 55%);pointer-events:none}
+.main::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-45%;width:30%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 3.4s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,50%{left:-45%}100%{left:130%}}
+@keyframes pop{0%{transform:scale(1.18);text-shadow:0 0 18px #fff}100%{transform:scale(1)}}
+.main .rv span.pop{display:inline-block;animation:pop .45s ease-out}
+.main .rl,.main .rv{position:relative;z-index:1}
+.rnd{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.rnd .bt{padding:7px 4px;font-size:12.5px;border-radius:9px;box-shadow:none}
+.main .rl{font-size:15px;font-weight:800;letter-spacing:.5px}
+.main .rv{display:flex;align-items:baseline;gap:8px;line-height:1}
+.main .rv span{font-weight:900;font-size:clamp(30px,8vw,38px)}
+.main .rv small{font-size:18px;font-weight:700}
+.rg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.w2{grid-column:span 2}.w3{grid-column:span 3}.w6{grid-column:span 6}
+.box{border:2.5px solid #0f766e;background:#e6f4f2;border-radius:12px;padding:5px 8px}
+.box .rl{font-size:10px;line-height:1.15;font-weight:800;color:#0b4f4a;text-transform:uppercase}
+.box .rv{margin-top:3px;display:flex;align-items:baseline;gap:6px}
+.box .rv span{font-size:21px;font-weight:900;color:#0f766e}
+.box .rv small{font-size:11px;font-weight:800;color:#0b4f4a}
+.notice{display:flex;align-items:stretch;border-radius:10px;overflow:hidden;background:#fff6d1;border:1.5px solid #e0b400}
+.notice .st{flex:none;width:16px;background:repeating-linear-gradient(-45deg,#1f1f1f 0 8px,#ffd400 8px 16px)}
+.notice .tx{flex:1;padding:6px 9px;font-size:11.5px;font-weight:700;color:#4a3b00;line-height:1.35}
+.notice b{display:block;font-size:13px;font-weight:900;letter-spacing:.8px;color:#7a1f00}
+.ptitle{font-size:20px;font-weight:900;color:#0b2f2c}
+.psub{font-size:14px;font-weight:700;margin-top:3px;color:#0f766e}
+.vis{background:#eef4f3;border-radius:12px;padding:6px;min-height:120px;display:flex;align-items:center;justify-content:center}
+.vis svg{width:100%;height:auto;max-height:62vh;display:block}
+.empty{font-size:15px;font-weight:700;color:#6b7780;text-align:center;padding:30px 14px;line-height:1.4}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#e6f4f2;border:2px solid #0f766e;color:#0b4f4a;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:800}
+.sob{border:2px solid #e8a3a3;background:#fff5f5;border-radius:10px;padding:5px 10px;display:flex;flex-direction:column;gap:1px}
+.sob.ok{border-color:#b7d6d2;background:#f1f8f7}
+.sob .t{font-size:11px;font-weight:900;color:#a00}
+.sob.ok .t{color:#0f766e}
+.sob .i{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:12.5px;color:#333}
+.sob .i b{font-size:15px;font-weight:900;color:#a00}
+.pnote{font-size:12px;color:#5d6b73;line-height:1.4}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;font-weight:700;color:#3d4a52}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-3px;margin-right:5px}
+.banner{width:100%;max-width:560px;margin:0 auto;border-radius:10px;display:block}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}.main::after,.main .rv span.pop{animation:none}}
+
+.vtg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.box .rv span{font-size:20px}
+/* ---- barra superior: volver + nuevo cálculo ---- */
+.hero .back{justify-self:start}.hero .newc{justify-self:end}
+.hbtn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.6);color:#fff;border-radius:999px;font-weight:800;font-size:12.5px;padding:8px 13px;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s}
+.hbtn:hover{background:rgba(255,255,255,.3)}
+.hbtn:focus-visible{outline:3px solid #ffd27a;outline-offset:2px}
+.hbtn.newc{background:#f07f0a;border-color:#ffd9a3;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,.25)}.hbtn.newc:hover{background:#ff9419}
+.hbtn svg{width:18px;height:18px;display:block;flex:none}
+@media(max-width:760px){.hero{grid-template-columns:1fr auto;grid-template-areas:"b n" "t t"}.hero .back{grid-area:b}.hero .newc{grid-area:n}.hero .ht{grid-area:t}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <a class="hbtn back" href="https://capacitacion3vesmartin-ves.github.io/campuscapacitacion/" target="_top">‹ Volver al Campus</a>
+    <div class="ht"><h1>Calculador de cielo raso drywall</h1><div class="sub">By: Capacitación V.E.S.</div></div>
+    <button type="button" class="hbtn newc" onclick="newCalc()" title="Nuevo cálculo" aria-label="Nuevo cálculo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4.5h-4.5"/><path d="M12 9v6M9 12h6"/></svg><span>Nuevo cálculo</span>
+    </button>
+  </header>
+  <div class="grid">
+    <section class="card">
+      <div class="row2">
+        <div class="fg"><label class="lb" for="lar">Largo del cielo raso *</label>
+          <div class="inp"><input type="number" id="lar" step="0.01" min="0" placeholder="0.00" inputmode="decimal" onfocus="this.select()" oninput="calc()"><span class="u">m</span></div></div>
+        <div class="fg"><label class="lb" for="anc">Ancho del cielo raso *</label>
+          <div class="inp"><input type="number" id="anc" step="0.01" min="0" placeholder="0.00" inputmode="decimal" onfocus="this.select()" oninput="calc()"><span class="u">m</span></div></div>
+      </div>
+      <details class="opc" id="opc"><summary><span>⚙ Ajustes de la estructura</span><em>opcional</em></summary>
+        <div class="fg"><label class="lb sm" for="p-ep">Separación entre parantes</label>
+          <div class="inp sm"><input type="number" id="p-ep" step="0.001" min="0" value="0.407" inputmode="decimal" onfocus="this.select()" oninput="calc()"><span class="u">m</span></div></div>
+        <div class="fg"><label class="lb sm" for="p-eo">Separación entre perfiles omega</label>
+          <div class="inp sm"><input type="number" id="p-eo" step="0.01" min="0" value="1" inputmode="decimal" onfocus="this.select()" oninput="calc()"><span class="u">m</span></div></div>
+        <div class="fg"><label class="lb sm" for="p-av">Altura de las velas (colgadores)</label>
+          <div class="inp sm"><input type="number" id="p-av" step="0.01" min="0" value="0.5" inputmode="decimal" onfocus="this.select()" oninput="calc()"><span class="u">m</span></div>
+          <div class="hint">Ya vienen con los valores usuales. Si dejas un campo vacío o en 0, se usa el valor usual.</div></div>
+      </details>
+      <a class="jump" href="#prev">Ver cómo queda instalado ↓</a>
+
+      <div class="title">Resultado</div>
+      <div class="main"><div class="rl">Placas de yeso:</div><div class="rv"><span id="m-v">0</span><small id="m-u">placas</small></div></div>
+      <div class="rnd"><button type="button" class="bt" id="rd-real" onclick="setRound('real')">Ver real</button><button type="button" class="bt on" id="rd-up" onclick="setRound('up')">Redondear ↑ arriba</button><button type="button" class="bt" id="rd-down" onclick="setRound('down')">Redondear ↓ abajo</button></div>
+      <div class="rg">
+        <div class="box w3"><div class="rl">Área del cielo raso</div><div class="rv"><span id="r-area">0</span><small>m²</small></div></div>
+        <div class="box w3"><div class="rl">Perímetro</div><div class="rv"><span id="r-per">0</span><small>m</small></div></div>
+        <div class="box w2"><div class="rl">Parantes</div><div class="rv"><span id="r-par">0</span><small>pzs</small></div></div>
+        <div class="box w2"><div class="rl">Rieles</div><div class="rv"><span id="r-rie">0</span><small>pzs</small></div></div>
+        <div class="box w2"><div class="rl">Perfiles omega</div><div class="rv"><span id="r-omg">0</span><small>pzs</small></div></div>
+        <div class="box w3"><div class="rl">Clavos</div><div class="rv"><span id="r-cla">0</span><small>cientos</small></div></div>
+        <div class="box w3"><div class="rl">Fulminantes</div><div class="rv"><span id="r-ful">0</span><small>cientos</small></div></div>
+        <div class="box w3"><div class="rl">Tornillos para plancha</div><div class="rv"><span id="r-tpl">0</span><small>cientos</small></div></div>
+        <div class="box w3"><div class="rl">Tornillos de estructura</div><div class="rv"><span id="r-tes">0</span><small>cientos</small></div></div>
+        <div class="box w2"><div class="rl">Masilla</div><div class="rv"><span id="r-mas">0</span><small>kilos</small></div></div>
+        <div class="box w2"><div class="rl">Cinta de papel</div><div class="rv"><span id="r-cin">0</span><small>cintas</small></div></div>
+        <div class="box w2"><div class="rl">Lana de vidrio</div><div class="rv"><span id="r-lan">0</span><small>rollos</small></div></div>
+      </div>
+    </section>
+
+    <aside class="card prev" id="prev">
+      <div class="notice"><div class="st"></div><div class="tx"><b>IMPORTANTE</b>El cálculo de materiales es aproximado. Siempre hay posibilidad que pueda sobrar o faltar material.</div><div class="st"></div></div>
+      <div><div class="ptitle">Así quedaría instalado</div><div class="psub" id="p-sub"></div></div>
+      <div class="vtg"><button type="button" class="bt sm on" id="vw-est" onclick="setVista('est')">Estructura</button><button type="button" class="bt sm" id="vw-pla" onclick="setVista('pla')">Placas</button></div>
+      <div class="vis" id="p-vis"></div>
+      <div class="legend" id="p-leg"></div>
+      <div class="chips" id="p-chips"></div>
+      <div class="pnote" id="p-note"></div>
+    </aside>
+  </div>
+  <details class="learn" id="lrn"><summary>📘 Aprender cómo se calcula</summary><div id="lrn-b"></div></details>
+  <img class="banner" alt="Capacitación VES" onerror="this.style.display='none'" src="https://image2url.com/r2/default/images/1774306178454-b0969afe-ce2f-4f2e-9e3f-aacfb880f5a9.jpg">
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const r6=x=>Math.round(x*1e6)/1e6,cl=x=>Math.ceil(r6(x)),fl=x=>Math.floor(r6(x)),fmt=x=>String(Math.round(x*100)/100);
+const PL_A=1.22,PL_L=2.44,PL_M2=2.98,PERFIL=3,VELA=1.0; /* placa 1.22 × 2.44 m (2.98 m²) · perfiles de 3 m · una vela por metro */
+let rmode='up',vista='est',_u=0;
+const pos=(v,d)=>{v=parseFloat(v);return v>0?v:d};
+const P=()=>({ep:pos($('p-ep').value,.407),eo:pos($('p-eo').value,1),av:pos($('p-av').value,.5)});
+const rn=x=>rmode==='real'?Math.round(x*100)/100:rmode==='up'?cl(x):Math.max(1,fl(x)); /* abajo: mínimo 1 */
+const rc=x=>rmode==='real'?Math.round(x*100)/100:rmode==='up'?Math.ceil(r6(x*100))/100:Math.max(.01,Math.floor(r6(x*100))/100); /* cientos, con 2 decimales */
+function setRound(m){rmode=m;['real','up','down'].forEach(k=>$('rd-'+k).classList.toggle('on',k===m));calc()}
+function setVista(v){vista=v;$('vw-est').classList.toggle('on',v==='est');$('vw-pla').classList.toggle('on',v==='pla');calc()}
+function raw(L,A,p){
+  const area=r6(L*A),per=r6(2*(L+A)),nP=fl(L/p.ep)+1,nO=fl(A/p.eo)+1;
+  const parE=nP*A/PERFIL*1.10,parV=nO*(L/VELA)*p.av/PERFIL;
+  return{area,per,nP,nO,parE,parV,placas:area/PL_M2*1.05,par:parE+parV,
+    rie:(per+nP*fl(A/PERFIL))/PERFIL*1.05,omg:nO*L/PERFIL*1.05,cla:per/25,mas:per/1.4,cin:per/3.66/75,lan:area/14.4}}
+function noDraw(msg){$('p-sub').textContent='';$('p-vis').innerHTML='<div class="empty">'+msg+'</div>';['p-leg','p-chips','p-note'].forEach(i=>$(i).innerHTML='')}
+function setOut(v){$('m-v').textContent=v.placas;$('m-u').textContent=v.placas===1?'placa':'placas';
+  const e=$('m-v');e.classList.remove('pop');void e.offsetWidth;e.classList.add('pop');
+  ['area','per','par','rie','omg','cla','ful','tpl','tes','mas','cin','lan'].forEach(k=>$('r-'+k).textContent=v[k]??0)}
+function explain(){
+  let L=parseFloat($('lar').value)||0,A=parseFloat($('anc').value)||0;
+  const own=L>0&&A>0;if(!own){L=4;A=3}
+  const p=P(),r=raw(L,A,p),f=fmt,st=[],c2=x=>(Math.ceil(r6(x*100))/100);
+  st.push(['Área y perímetro',f(L)+' m × '+f(A)+' m = <b>'+f(r.area)+' m²</b> · perímetro ('+f(L)+' + '+f(A)+') × 2 = <b>'+f(r.per)+' m</b>']);
+  st.push(['Placas de yeso',f(r.area)+' m² ÷ <em>'+PL_M2+'</em> m² por placa × <em>1.05</em> (5 % de desperdicio) = '+r.placas.toFixed(2)+' → <b>'+cl(r.placas)+' placas</b>']);
+  st.push(['Parantes','Líneas de parante: '+f(L)+' ÷ '+p.ep+' → '+(r.nP-1)+' + 1 = <em>'+r.nP+'</em>. Estructura: '+r.nP+' × '+f(A)+' m ÷ 3 m × 1.10 = '+r.parE.toFixed(2)+'. Velas: '+r.nO+' × '+f(L)+' × '+p.av+' m ÷ 3 m = '+r.parV.toFixed(2)+'. Total '+r.par.toFixed(2)+' → <b>'+cl(r.par)+' parantes</b>']);
+  st.push(['Rieles','('+f(r.per)+' m de perímetro + '+r.nP+' × '+fl(A/PERFIL)+' empalmes) ÷ 3 m × 1.05 = '+r.rie.toFixed(2)+' → <b>'+cl(r.rie)+' rieles</b>']);
+  st.push(['Perfiles omega','Líneas de omega: '+f(A)+' ÷ '+p.eo+' → '+(r.nO-1)+' + 1 = <em>'+r.nO+'</em>. '+r.nO+' × '+f(L)+' m ÷ 3 m × 1.05 = '+r.omg.toFixed(2)+' → <b>'+cl(r.omg)+' perfiles</b>']);
+  st.push(['Clavos y fulminantes',f(r.per)+' m ÷ <em>25</em> = <b>'+c2(r.cla)+' cientos</b> de cada uno']);
+  const pl=cl(r.placas),pa=cl(r.par);
+  st.push(['Tornillos para plancha',pl+' placas × 35 ÷ 100 = '+(pl*35/100).toFixed(2)+' → <b>'+cl(pl*35/100)+' cientos</b>']);
+  st.push(['Tornillos de estructura',pa+' parantes × 8 ÷ 100 = '+(pa*8/100).toFixed(2)+' → <b>'+cl(pa*8/100)+' cientos</b>']);
+  st.push(['Masilla',f(r.per)+' m ÷ <em>1.4</em> = <b>'+cl(r.mas)+' kilos</b>']);
+  st.push(['Cinta de papel','('+f(r.per)+' m ÷ <em>3.66</em>) ÷ <em>75</em> = '+r.cin.toFixed(3)+' → <b>'+cl(r.cin)+(cl(r.cin)===1?' cinta':' cintas')+'</b>']);
+  st.push(['Lana de vidrio',f(r.area)+' m² ÷ <em>14.4</em> m² por rollo = '+r.lan.toFixed(2)+' → <b>'+cl(r.lan)+(cl(r.lan)===1?' rollo':' rollos')+'</b>']);
+  st.push(['Redondeo','«Arriba» sube al entero, «abajo» baja (mínimo 1) y «Ver real» muestra decimales. Es un cálculo aproximado.']);
+  $('lrn-b').innerHTML='<div class="lh">'+(own?'Con tus medidas':'Ejemplo: cielo raso de 4 × 3 m (escribe tus medidas para verlo con tus datos)')+'</div><ol class="steps">'+st.map((x,i)=>'<li><span class="n">'+(i+1)+'</span><div><span class="st">'+x[0]+'</span>'+x[1]+'</div></li>').join('')+'</ol>'}
+function calc(){
+  explain();
+  const L=parseFloat($('lar').value)||0,A=parseFloat($('anc').value)||0;
+  if(!(L>0&&A>0)){setOut({placas:0});return noDraw('Escribe el largo y el ancho<br>para ver cómo quedaría instalado.')}
+  const p=P(),r=raw(L,A,p),placas=rn(r.placas),par=rn(r.par);
+  setOut({placas,area:fmt(r.area),per:fmt(r.per),par:fmt(par),rie:fmt(rn(r.rie)),omg:fmt(rn(r.omg)),cla:fmt(rc(r.cla)),ful:fmt(rc(r.cla)),
+    tpl:fmt(rn(placas*35/100)),tes:fmt(rn(par*8/100)),mas:fmt(rn(r.mas)),cin:fmt(rn(r.cin)),lan:fmt(rn(r.lan))});
+  preview(L,A,p,r,placas);
+}
+function preview(L,A,p,r,placas){
+  const W=A,H=L,B=Math.max(W,H),M=B*.13,lw=B/300,t=B*.014,fs=B/22;
+  const vw=W+M*1.12,vh=H+M*1.12,rc_='#2f3a41';
+  let s='<svg viewBox="0 0 '+vw+' '+vh+'" xmlns="http://www.w3.org/2000/svg">';
+  s+='<rect x="'+(M-lw*2)+'" y="'+(M-lw*2)+'" width="'+(W+lw*4)+'" height="'+(H+lw*4)+'" fill="#4a545c"/>';
+  let leg='',note='';
+  if(vista==='est'){
+    s+='<rect x="'+M+'" y="'+M+'" width="'+W+'" height="'+H+'" fill="#f4f1ea"/>';
+    for(let i=0;i<r.nP;i++){const y=M+Math.min(i*p.ep,H);s+='<line x1="'+M+'" y1="'+y+'" x2="'+(M+W)+'" y2="'+y+'" stroke="#14a89c" stroke-width="'+lw*2.2+'"/>'}
+    for(let j=0;j<r.nO;j++){const x=M+Math.min(j*p.eo,W);s+='<line x1="'+x+'" y1="'+M+'" x2="'+x+'" y2="'+(M+H)+'" stroke="#f07f0a" stroke-width="'+lw*3.4+'"/>'}
+    leg='<span><i style="background:'+rc_+'"></i>Riel perimetral</span><span><i style="background:#14a89c"></i>Parantes</span><span><i style="background:#f07f0a"></i>Perfiles omega</span>';
+    note='Vista desde arriba. Los parantes (verde azulado) van cada '+p.ep+' m y los perfiles omega (naranja) cada '+p.eo+' m, cruzados; el riel rodea todo el perímetro. Dibujo referencial.'
+  }else{
+    const cols=cl(W/PL_A),rows=cl(H/PL_L);let cut=0,full=0;
+    for(let c=0;c<cols;c++)for(let q=0;q<rows;q++){
+      const w=Math.min(PL_A,W-c*PL_A),h=Math.min(PL_L,H-q*PL_L),isCut=w<PL_A-.004||h<PL_L-.004;isCut?cut++:full++;
+      s+='<rect x="'+(M+c*PL_A)+'" y="'+(M+q*PL_L)+'" width="'+w+'" height="'+h+'" fill="'+(isCut?'#f5b25c':'#e9eef0')+'" stroke="#8d969c" stroke-width="'+lw*1.4+'"/>'}
+    leg='<span><i style="background:#e9eef0;border:1px solid #8d969c"></i>Placa entera</span><span><i style="background:#f5b25c"></i>Placa con corte</span><span><i style="background:'+rc_+'"></i>Riel perimetral</span>';
+    note='Placas de 1.22 × 2.44 m puestas cruzadas a los parantes ('+full+' enteras y '+cut+' con corte en el dibujo). La cantidad del resultado sale del área más 5 % de desperdicio, por eso puede diferir del dibujo.'}
+  s+='<rect x="'+(M+t/2)+'" y="'+(M+t/2)+'" width="'+(W-t)+'" height="'+(H-t)+'" fill="none" stroke="'+rc_+'" stroke-width="'+t+'"/>';
+  const tx=(x,y,txt,rot)=>'<text '+(rot?'transform="translate('+x+' '+y+') rotate(-90)"':'x="'+x+'" y="'+y+'"')+' text-anchor="middle" font-size="'+fs+'" font-weight="800" fill="#0f766e">'+txt+'</text>';
+  s+=tx(M+W/2,M*.62,fmt(W)+' m')+tx(M*.5,M+H/2,fmt(H)+' m',1)+'</svg>';
+  $('p-vis').innerHTML=s;
+  $('p-sub').textContent='Cielo raso · '+fmt(W)+' m × '+fmt(H)+' m';
+  $('p-leg').innerHTML=leg;
+  $('p-chips').innerHTML='<span class="chip">'+fmt(r.area)+' m²</span><span class="chip">'+placas+(placas===1?' placa':' placas')+'</span><span class="chip">'+r.nP+' líneas de parantes</span><span class="chip">'+r.nO+' líneas de omega</span>';
+  $('p-note').textContent=note;
+}
+/* Nuevo cálculo: deja todo en blanco para el siguiente cliente */
+function newCalc(){
+  $('lar').value='';$('anc').value='';$('p-ep').value='0.407';$('p-eo').value='1';$('p-av').value='0.5';$('opc').open=false;
+  rmode='up';vista='est';
+  ['real','up','down'].forEach(k=>$('rd-'+k).classList.toggle('on',k==='up'));
+  $('vw-est').classList.add('on');$('vw-pla').classList.remove('on');
+  calc();window.scrollTo({top:0,behavior:'smooth'});$('lar').focus({preventScroll:true})}
+calc();
+</script>
+</body>
+</html>
